@@ -3,7 +3,7 @@ import os
 import importlib
 import sys
 import subprocess
-requiredLibraries = ['tensorflow', 'PIL']
+requiredLibraries = ['tensorflow', 'pillow', 'numpy']
 for lib in requiredLibraries:
     try:
         importlib.import_module(lib)
@@ -15,12 +15,11 @@ for lib in requiredLibraries:
         except Exception as e:
             print(f"Ошибка при установке {lib}: {e}\n Скрипт будет остановлен. Попробуйте установить {lib} вручную")
             sys.exit()
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.datasets import mnist
 import numpy as np
-import matplotlib.pyplot as plt
+from PIL import Image
 
 # 1. Загрузка данных MNIST
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
@@ -42,8 +41,8 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 # 5. Обучение модели
 model.fit(train_images, train_labels, epochs=10, batch_size=32, validation_data=(test_images, test_labels))
 
-# 6. Сохранение модели
-model.save('mnist_model.h5')
+# 6. Сохранение модели в новом формате Keras
+model.save('mnist_model.keras')
 
 # Функция для предсказания на новых изображениях
 def predict_image(image_path, model):
@@ -56,6 +55,9 @@ def predict_image(image_path, model):
     return predicted_digit
 
 # Пример использования предсказания на новом изображении
-image_path = 'path_to_your_image.png'  # Укажите путь к изображению
-predicted_digit = predict_image(image_path, model)
-print(f'Predicted digit: {predicted_digit}')
+curentFolder = os.getcwd()
+imagesFolder = os.path.join(curentFolder, 'images')
+for eachImage in os.listdir(imagesFolder):
+    imageSample = os.path.join(imagesFolder, eachImage)
+    predicted_digit = predict_image(imageSample, model)
+    print(f'В файле с названием {eachImage} предсказана цифра: {predicted_digit}\n')
