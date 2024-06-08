@@ -40,7 +40,7 @@ model = keras.Sequential([
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # 5. Обучение модели
-model.fit(train_images, train_labels, epochs=20, batch_size=32, validation_data=(test_images, test_labels))
+model.fit(train_images, train_labels, epochs=3, batch_size=32, validation_data=(test_images, test_labels))
 
 # 6. Сохранение модели в новом формате Keras
 model.save('mnist_model.keras')
