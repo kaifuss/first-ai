@@ -15,6 +15,7 @@ for lib in requiredLibraries:
         except Exception as e:
             print(f"Ошибка при установке {lib}: {e}\n Скрипт будет остановлен. Попробуйте установить {lib} вручную")
             sys.exit()
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.datasets import mnist
@@ -39,14 +40,13 @@ model = keras.Sequential([
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # 5. Обучение модели
-model.fit(train_images, train_labels, epochs=10, batch_size=32, validation_data=(test_images, test_labels))
+model.fit(train_images, train_labels, epochs=20, batch_size=32, validation_data=(test_images, test_labels))
 
 # 6. Сохранение модели в новом формате Keras
 model.save('mnist_model.keras')
 
 # Функция для предсказания на новых изображениях
 def predict_image(image_path, model):
-    from PIL import Image
     image = Image.open(image_path).convert('L')  # Конвертируем изображение в оттенки серого
     image = image.resize((28, 28))  # Изменяем размер изображения до 28x28
     image_array = np.array(image).reshape(1, 784).astype('float32') / 255  # Подготавливаем данные
