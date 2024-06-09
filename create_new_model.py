@@ -22,10 +22,11 @@ def createModel():
 
     # 3. Создание модели Sequential
     batchSize = 128  # 128 семплов в каждой эпохе
-    numEpochs = 10  # 10 эпох
-    hiddenSize = 196  # 196 нейронов в слое
+    numEpochs = 5  # 5 эпох
+    hiddenSize = 784  # 784 нейронов в слое
     model = keras.Sequential([
-        layers.Dense(hiddenSize, activation='relu', input_shape=(784,)),
+        layers.Input(shape=(784,)),
+        layers.Dense(hiddenSize, activation='relu'),
         layers.Dense(hiddenSize, activation='relu'),
         layers.Dense(amountOfClasses, activation='softmax')
     ])
