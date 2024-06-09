@@ -9,37 +9,35 @@ from keras import layers
 from keras.datasets import mnist
 from keras.utils import to_categorical
 
-
-
 # 1. Загрузка данных MNIST
-trainingNumbers = 60000 
+trainingNumbers = 60000
 validatingNumbers = 10000
 
-heiht, width, depth = 28, 28, 1
-ammountOfClasses = 10
+height, width, depth = 28, 28, 1
+amountOfClasses = 10
 
-(trainImages, trainLabels), (validationgImages, validateLabes) = mnist.load_data()
+(trainImages, trainLabels), (validationImages, validationLabels) = mnist.load_data()
 
 # 2. Предварительная обработка данных
-trainImages = trainImages.reshape((trainingNumbers, heiht * width)).astype('float32') / 255
-validationgImages = validationgImages.reshape((validatingNumbers, heiht * width)).astype('float32') / 255
+trainImages = trainImages.reshape((trainingNumbers, height * width)).astype('float32') / 255
+validationImages = validationImages.reshape((validatingNumbers, height * width)).astype('float32') / 255
 
-trainLabels = to_categorical(trainLabels, ammountOfClasses)
-validateLabes = to_categorical(validateLabes, ammountOfClasses)
+trainLabels = to_categorical(trainLabels, amountOfClasses)
+validationLabels = to_categorical(validationLabels, amountOfClasses)
 
 # 3. Создание модели Sequential
-batchSize = 128 # in each iteration, we consider 128 training examples at once
-numEpochs = 20 # we iterate twenty times over the entire training set
-hiddenSize = 512 # there will be 512 neurons in both hidden layers
+batchSize = 128  # in each iteration, we consider 128 training examples at once
+numEpochs = 20  # we iterate twenty times over the entire training set
+hiddenSize = 512  # there will be 512 neurons in both hidden layers
 
 model = keras.Sequential([
     layers.Dense(hiddenSize, activation='relu', input_shape=(784,)),
     layers.Dense(hiddenSize, activation='relu'),
-    layers.Dense(ammountOfClasses, activation='softmax')
+    layers.Dense(amountOfClasses, activation='softmax')
 ])
 
 # 4. Компиляция модели
-model.compile(optimizer='adam', 
+model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
@@ -48,7 +46,7 @@ model.fit(trainImages, trainLabels,
           epochs=numEpochs, batch_size=batchSize,
           verbose=1, validation_split=0.1)
 
-model.evaluate(validationgImages, validateLabes, verbose=1)
+model.evaluate(validationImages, validationLabels, verbose=1)
 
 # 6. Сохранение модели в новом формате Keras
 model.save('mnist_model.keras')
@@ -69,9 +67,6 @@ def predict_image(image_path, model):
         prediction = model.predict(image_array)
         predicted_digit = np.argmax(prediction)
 
-        # Вывод вероятностей
-        print(f"Predicted probabilities: {prediction}")
-
         return predicted_digit
     except Exception as e:
         print(f"Error processing image {image_path}: {e}")
@@ -87,4 +82,3 @@ for eachImage in os.listdir(imagesFolder):
     imageSample = os.path.join(imagesFolder, eachImage)
     predicted_digit = predict_image(imageSample, loaded_model)
     print(f'В файле с названием {eachImage} предсказана цифра: {predicted_digit}\n')
-
